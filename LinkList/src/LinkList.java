@@ -1,5 +1,8 @@
 import com.sun.jdi.PrimitiveValue;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 public class LinkList <T> {
 
     public Node<T> head;
@@ -305,6 +308,127 @@ public class LinkList <T> {
         }
         return result;
     }
+
+    public void addNodesFromArray(T[] array){
+        if(array == null || array.length == 0){
+            return;
+        }
+        for (T value : array) {
+            addNodeToTail(value);
+        }
+    }
+
+    public void swapNodesInPairs(){
+        if(head == null || head.next == null){
+            return;
+        }
+
+        Node<T> node1 = head;
+        Node<T> node2 = head.next;
+        while(node2 != null && node2.next != null){
+            T data = node1.data;
+            node1.data = node2.data;
+            node2.data = data;
+            node1 = node1.next.next;
+            if(node2.next != null){
+                node2 = node2.next.next;
+            }
+        }
+    }
+
+    public void reverseInGroupOfK(int k){
+        if(k <= 0){
+            return;
+        }
+        if(k > length){
+            reverseList();
+            return;
+        }
+
+        Stack<T> stack = new Stack<>();
+        Node<T> current = head;
+        Node<T> start = head;
+        while(current != null){
+            for(int i = 0 ; i < k ; i ++){
+                if(current!= null){
+                    stack.push(current.data);
+                    current = current.next;
+                }
+            }
+            while(!stack.empty()){
+                start.data = stack.pop();
+                start = start.next;
+            }
+        }
+    }
+
+
+
+//    public void reverseInGroupOfK(int k){
+//        if(k <= 0){
+//            return;
+//        }
+//        if(k > length){
+//            reverseList();
+//            return;
+//        }
+//
+//        ArrayList<Node<T>>  list = new ArrayList<>();
+//        Node<T> start = head;
+//        Node<T> prev = head ;
+//        Node<T> end = head;
+//        Node<T> current = head;
+//
+//        // Break List into sizes of K and add them to list
+//        while(end != null){
+//            for(int i = 0 ; i < k ; i ++){
+//                if(i != 0){
+//                    prev = prev.next;
+//                }
+//                if(end != null){
+//                    end = end.next;
+//                }else{
+//                    break;
+//                }
+//            }
+//
+//            if(end == null){
+//                break;
+//            }
+//
+//            prev.next = null;
+//            list.add(start);
+//
+//            start = end;
+//            prev = start;
+//            end = start;
+//        }
+//
+//
+//    }
+
+    public void rotateList(int k){
+        k = k % length;
+        reverseList();
+        Node<T> firstHalf = head;
+        Node<T> current = head;
+
+        for(int i = 0 ; i < k-1; i ++){
+            current = current.next;
+        }
+        Node<T> secondHalf = current.next;
+        current.next = null;
+        firstHalf = reverseList(firstHalf);
+        secondHalf = reverseList(secondHalf);
+        current = firstHalf;
+        for(int i = 0 ; i < k-1; i ++){
+            current = current.next;
+        }
+        current.next = secondHalf;
+        head = firstHalf;
+
+    }
+
 
 
 }
