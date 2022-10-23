@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class BST <T extends Comparable<T>> {
 
@@ -261,6 +258,91 @@ public class BST <T extends Comparable<T>> {
 
             inOrderPredecessor(node.right,value, found,  predNode);
         }
+    }
+
+    private ArrayList<Node<T>> getSearchPath(Node<T> node1){
+        ArrayList<Node<T>> list = new ArrayList<>();
+        Node<T> current = root;
+        while(current!= null){
+            list.add(current);
+            if(current.data.compareTo(node1.data) == 0){
+               break;
+            }
+            else if (current.data.compareTo(node1.data) < 0){
+                current = current.right;
+            }else{
+                current = current.left;
+            }
+        }
+
+        return list;
+
+    }
+
+    public Node<T> LowestCommonAncestor(Node<T> node1, Node<T> node2){
+        ArrayList<Node<T>> list1 = getSearchPath(node1);
+        ArrayList<Node<T>> list2 = getSearchPath(node2);
+        int index1 = 0;
+        int index2 = 0;
+        Node lca = root;
+        while(index1 < list1.size() && index2 < list2.size()){
+            if(list1.get(index1).data != list2.get(index2).data){
+                return lca;
+            }
+            lca = list1.get(index1);
+            index1++;
+            index2 ++;
+        }
+        return null;
+
+    }
+
+
+    public Node<T> LCAWithParentNode(Node<T> node1, Node<T> node2){
+
+        HashSet<Node<T>> set = new HashSet<>();
+
+        while(node1 != root && node2 != root){
+            if(set.contains(node1)){
+                return node1;
+            }
+            if(set.contains(node2)){
+                return node2;
+            }
+
+            set.add(node1);
+            set.add(node2);
+            node1 = node1.parent;
+            node2 = node2.parent;
+
+        }
+        return null;
+    }
+
+    public Node<T> LCARecursive(Node<T> node1, Node<T> node2){
+        LCARecursive(root, node1,node2);
+    }
+
+    private Node<T> LCARecursive(Node<T> currentNode, Node<T> node1, Node<T> node2){
+        if(currentNode == null){
+            return null;
+        }
+        if(currentNode == node1 || currentNode == node2){
+            return currentNode;
+        }
+        Node<T> left = LCARecursive(currentNode.left, node1, node2);
+        Node<T> right = LCARecursive(currentNode.right, node1, node2);
+
+        if(left != null && right != null){
+            return currentNode;
+        }
+
+       if(left != null ){
+           return left ;
+       }
+
+       return right;
+
     }
 
 
