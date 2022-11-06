@@ -31,16 +31,19 @@ public class Main {
 //        Node<Integer> pred = bst.inOrderPredecessor(four);
 //        System.out.println();
 
+//        bst.root = getBST();
+//
+//        Node<Integer> one = bst.root.left.left;
+//        Node<Integer> four = bst.root.left.right.left;
+//
+//        Node<Integer> lca = bst.LowestCommonAncestor(one, four);
+//        System.out.println(lca.data);
+//
+//        Node<Integer> lcaParent = bst.LCAWithParentNode(one, four);
+//        System.out.println(lca.data);
+
         bst.root = getBST();
-
-        Node<Integer> one = bst.root.left.left;
-        Node<Integer> four = bst.root.left.right.left;
-
-        Node<Integer> lca = bst.LowestCommonAncestor(one, four);
-        System.out.println(lca.data);
-
-        Node<Integer> lcaParent = bst.LCAWithParentNode(one, four);
-        System.out.println(lca.data);
+        System.out.println(bst.validateBST());
 
     }
 
@@ -81,7 +84,7 @@ public class Main {
         root.right.right.parent = root.right;
 
         root.left.right.left = new Node<>(4);
-        root.left.right.right = new Node<>(7);
+        root.left.right.right = new Node<>(17);
         root.left.right.left.parent = root.left.right;
         root.left.right.right.parent = root.left.right;
 

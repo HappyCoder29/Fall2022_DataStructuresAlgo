@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BinaryTree <T>{
@@ -384,5 +381,177 @@ public class BinaryTree <T>{
                 areSymmetricTrees(node1.right, node2.right);
     }
 
+
+
+    public void printAllPaths(){
+        ArrayList<T> list = new ArrayList<>();
+        printAllPaths(root, list, 0);
+    }
+    private void printAllPaths(Node<T> node, ArrayList<T> list, int index){
+        if(node != null){
+            list.add(index, node.data);
+            if(node.left == null && node.right == null){
+               for(int i = 0 ; i < index + 1; i ++) {
+                    System.out.printf(list.get(i) + " -> ");
+                }
+                System.out.println("Null");
+            }
+            printAllPaths(node.left, list, index +1);
+            printAllPaths(node.right, list, index +1);
+
+        }
+    }
+
+    public ArrayList<ArrayList<T>> getAllPaths(){
+        ArrayList<T> list = new ArrayList<>();
+        ArrayList<ArrayList<T>> fullList = new ArrayList<>();
+
+        getAllPaths(root, list,fullList, 0);
+        return fullList;
+    }
+
+    private void getAllPaths(Node<T> node, ArrayList<T> list, ArrayList<ArrayList<T>> fullList, int index){
+        if(node != null){
+            list.add(index, node.data);
+            if(node.left == null && node.right == null){
+                ArrayList<T> path = new ArrayList<>();
+                for(int i = 0 ; i < index + 1; i ++) {
+                    path.add(i, list.get(i));
+                }
+                fullList.add(path);
+            }
+            getAllPaths(node.left, list, fullList, index +1);
+            getAllPaths(node.right, list, fullList, index +1);
+        }
+    }
+
+    public boolean hasPathSum(int sum){
+        ArrayList<T> list = new ArrayList<>();
+        BoxValue<Boolean> hasPath = new BoxValue<>(false);
+        hasPathSum(root, hasPath,list, sum, 0);
+        return hasPath.data;
+    }
+
+    private void hasPathSum(Node<T> node, BoxValue<Boolean> hasPath, ArrayList<T> list,  int sum, int index) {
+
+        if (node != null && hasPath.data == false) {
+            // Do something
+            sum = sum - (Integer) node.data;
+            list.add(index, node.data);
+            if (node.left == null && node.right == null) {
+                if (sum == 0) {
+                    hasPath.data = true;
+                    for(int i = 0 ; i < index + 1; i ++) {
+                        System.out.printf(list.get(i) + " -> ");
+                    }
+                    System.out.println("Null");
+                }
+            }
+            hasPathSum(node.left, hasPath, list, sum, index + 1);
+            hasPathSum(node.right, hasPath, list, sum, index + 1);
+        }
+    }
+
+    public Integer maxPathSum(){
+        ArrayList<T> list = new ArrayList<>();
+        BoxValue<Integer> boxMaxValue = new BoxValue<>(0);
+        maxPathSum(root, list, boxMaxValue, 0);
+        return boxMaxValue.data;
+    }
+    private void maxPathSum(Node<T> node,ArrayList<T> list, BoxValue<Integer> boxMaxValue,  int index ){
+        if(node != null){
+            list.add(index, node.data);
+            if(node.left == null && node.right == null){
+                Integer value = 0;
+                for(int i = 0 ; i < index + 1; i ++) {
+                    value += (Integer) list.get(i);
+                }
+                if(value > boxMaxValue.data){
+                    boxMaxValue.data = value;
+                }
+
+            }
+            maxPathSum(node.left, list, boxMaxValue,  index +1);
+            maxPathSum(node.right, list, boxMaxValue, index +1);
+
+        }
+    }
+
+    public int diameter(){
+        return diameter(root);
+    }
+    private int diameter(Node<T> node){
+        if(node == null){
+            return 0;
+        }
+
+        int lHeight = height(node.left);
+        int rHeight = height(node.right);
+
+        int lDiameter = height(node.left);
+        int rDiameter = height(node.right);
+
+        return  Math.max(lHeight + rHeight + 1 , Math.max(lDiameter, rDiameter));
+
+    }
+
+    public int sumOfLeftleaves(){
+        BoxValue<Integer> box = new BoxValue<>(0);
+        sumOfLeftleaves(root, box);
+        return box.data;
+    }
+
+    public void sumOfLeftleaves(Node<T> node, BoxValue<Integer> box){
+        if(node != null){
+            // If Node.left exist and is a leaf node
+            if( node.left != null && ( node.left.left == null && node.left.right == null) ){
+                box.data += (Integer) node.left.data;
+            }
+
+            sumOfLeftleaves(node.left, box);
+            sumOfLeftleaves(node.right, box);
+
+        }
+    }
+
+
+    public void populateNextRight(){
+        if(root == null){
+            return;
+        }
+
+        Queue<Node<T>> queue = new LinkedList<>();
+        queue.add(root);
+        queue.add(null);
+        Node<T> prevNode = null;
+
+        while(queue.size() != 0){
+            Node<T> node = queue.remove();
+
+            if(node != null){
+                System.out.printf(node.data + " , ");
+                if(node.left!= null){
+                    queue.add(node.left);
+                }
+                if(node.right!= null){
+                    queue.add(node.right);
+                }
+                if(prevNode != null){
+                    prevNode.nextRight = node;
+                }
+                prevNode = node;
+            }
+            else{
+                // We have reached to a new level
+                System.out.println();
+                if(queue.size() == 0){
+                    break;
+                }
+                prevNode = null;
+                queue.add(null);
+            }
+        }
+        System.out.println();
+    }
 
 }

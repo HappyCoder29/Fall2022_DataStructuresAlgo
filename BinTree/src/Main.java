@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
 //        BinaryTree<Integer> tree = getTree();
@@ -21,11 +23,27 @@ public class Main {
 //
 //        BinaryTree<Integer> test  = new BinaryTree<>();
 //        System.out.println( test.areSameTrees(tree1.root, tree2.root) );
+//
+//        Integer[] preOrder = {1,2,4,8,5,9,3,6,10, 7, 11};
+//        Integer[] inOrder = {8,4,2,9,5,1,6,10,3,7,11};
+//        Node<Integer> root = getRootFromPreAndInOrderTraversal(preOrder, inOrder);
+//        System.out.println();
 
-        Integer[] preOrder = {1,2,4,8,5,9,3,6,10, 7, 11};
-        Integer[] inOrder = {8,4,2,9,5,1,6,10,3,7,11};
-        Node<Integer> root = getRootFromPreAndInOrderTraversal(preOrder, inOrder);
-        System.out.println();
+        BinaryTree<Integer> tree = getTree();
+//        tree.printAllPaths();
+//
+//        ArrayList<ArrayList<Integer>> fullList = tree.getAllPaths();
+//
+//        for (ArrayList<Integer> path: fullList) {
+//            for (Integer i : path) {
+//                System.out.printf(i + " -> ");
+//            }
+//            System.out.println("Null");
+//        }
+       // System.out.println( tree.hasPathSum(20) );
+        System.out.println(tree.maxPathSum());
+        tree.populateNextRight();
+
 
     }
     private static BinaryTree<Integer> getTree(){
@@ -42,10 +60,12 @@ public class Main {
         tree.root.right.right = new Node<>(7);
 
 
-//        tree.root.left.left.left = new Node<>(8);
-//        tree.root.left.right.left = new Node<>(9);
-//        tree.root.right.left.right = new Node<>(10);
-//        tree.root.right.right.right = new Node<>(11);
+        tree.root.left.left.left = new Node<>(8);
+        tree.root.left.right.left = new Node<>(9);
+        tree.root.right.left.right = new Node<>(10);
+        tree.root.right.right.right = new Node<>(11);
+        tree.root.right.right.right.right = new Node<>(12);
+
 
         return tree;
     }
@@ -92,6 +112,33 @@ public class Main {
         }
 
         return node;
+    }
+
+    private static String stringCompression(String str){
+        if(str == null){
+            return null;
+        }
+        char[] arr = str.toCharArray();
+        if(arr.length <=1){
+            return  arr.toString();
+        }
+        int index= 0;
+        char prevChar = arr[index];
+        StringBuilder sb = new StringBuilder();
+        int count = 1;
+        for(int i = 1; i < arr.length; i ++){
+            if(prevChar == arr[i]){
+                count++;
+            }else{
+                sb.append(prevChar);
+                sb.append(count);
+                prevChar = arr[i];
+                count = 1;
+            }
+        }
+        sb.append(prevChar);
+        sb.append(count);
+        return sb.toString();
     }
 
 }

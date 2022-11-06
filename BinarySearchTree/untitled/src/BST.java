@@ -1,3 +1,4 @@
+import javax.swing.text.BoxView;
 import java.util.*;
 
 public class BST <T extends Comparable<T>> {
@@ -320,7 +321,7 @@ public class BST <T extends Comparable<T>> {
     }
 
     public Node<T> LCARecursive(Node<T> node1, Node<T> node2){
-        LCARecursive(root, node1,node2);
+        return LCARecursive(root, node1,node2);
     }
 
     private Node<T> LCARecursive(Node<T> currentNode, Node<T> node1, Node<T> node2){
@@ -343,6 +344,25 @@ public class BST <T extends Comparable<T>> {
 
        return right;
 
+    }
+
+
+    public boolean validateBST(){
+        return validateBST(root, Integer.MAX_VALUE, Integer.MIN_VALUE);
+    }
+
+    private boolean validateBST(Node<T> node, Integer min, Integer max){
+        if(node == null){
+            return true;
+        }
+        // Do something
+        if((Integer)node.data > max || (Integer)node.data < min){
+            return false;
+        }
+
+        validateBST(node.left,min, (Integer) node.data );
+        validateBST(node.right,(Integer) node.data , max);
+        return true;
     }
 
 

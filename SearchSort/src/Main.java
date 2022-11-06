@@ -1,4 +1,8 @@
-import java.util.Arrays;
+import org.w3c.dom.css.CSSUnknownRule;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Stack;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,6 +30,21 @@ public class Main {
 
         int[] sorted = {1,2,3,4,5,6,7,8,9};
         System.out.println(binSearch(sorted, 23));
+
+        int[] findIndexes = {0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,5,5,5,5,7,7,9};
+        System.out.println(findTotalOccurances(findIndexes, 2));
+
+        ArrayList<Interval> intervals = new ArrayList<>();
+        //[1,3],[2,6],[8,10],[15,18]
+        intervals.add(new Interval(1, 3));
+        intervals.add(new Interval(2, 6));
+        intervals.add(new Interval(8, 10));
+        intervals.add(new Interval(15, 18));
+        ArrayList<Interval> mergedIntervals =  mergeIntervals(intervals);
+        for (Interval interval : mergedIntervals ) {
+            System.out.println("[" + interval.start + ", " + interval.end + " ]");
+        }
+
     }
 
     private static void printArray(int[] arr){
@@ -367,6 +386,151 @@ public class Main {
     * Sort -> n Log (n)
     * Search - > log(n)
     * */
+
+
+    public static int findFirstIndex(int[] arr, int x){
+        return  findFirstIndex(arr, x, 0, arr.length -1);
+    }
+    private static int findFirstIndex(int[] arr, int x, int low, int high){
+        if( low > high){
+            return -1;
+        }
+        if(arr[high] < x){
+            return -1;
+        }
+        if(arr[low] > x){
+            return -1;
+        }
+        if(arr[low] ==x && arr[high] == x){
+            return low;
+        }
+        int mid = (high + low)/2;
+
+        if(arr[mid] < x){
+            return findFirstIndex(arr, x, mid +1, high);
+        }
+        else if(arr[mid] > x){
+            return findFirstIndex(arr, x, low, mid -1);
+        }else{
+            return findFirstIndex(arr, x, low, mid -1);
+        }
+    }
+
+    public static int findLastIndex(int[] arr, int x){
+        return  findLastIndex(arr, x, 0, arr.length -1);
+    }
+    private static int findLastIndex(int[] arr, int x, int low, int high){
+        if( low > high){
+            return -1;
+        }
+        if(arr[high] < x){
+            return -1;
+        }
+        if(arr[low] > x){
+            return -1;
+        }
+        if(arr[low] ==x && arr[high] == x){
+            return high;
+        }
+        int mid = (high + low)/2;
+
+        if(arr[mid] < x){
+            return findLastIndex(arr, x, mid +1, high);
+        }
+        else if(arr[mid] > x){
+            return findLastIndex(arr, x, low, mid -1);
+        }else{
+            return findLastIndex(arr, x, mid, high -1);
+        }
+    }
+
+
+    public static int findTotalOccurances(int[] arr, int x){
+        return  findTotalOccurances(arr, x, 0, arr.length -1);
+    }
+    private static int findTotalOccurances(int[] arr, int x, int low, int high){
+        if( low > high){
+            return 0;
+        }
+        if(arr[high] < x){
+            return 0;
+        }
+        if(arr[low] > x){
+            return 0;
+        }
+        if(arr[low] ==x && arr[high] == x){
+            return high - low + 1;
+        }
+        int mid = (high + low)/2;
+
+        if(arr[mid] < x){
+            return findTotalOccurances(arr, x, mid +1, high);
+        }
+        else if(arr[mid] > x){
+            return findTotalOccurances(arr, x, low, mid -1);
+        }else{
+            return findTotalOccurances(arr, x, low, mid -1) + 1 +
+                    findTotalOccurances(arr, x, mid +1, high);
+        }
+    }
+
+    public int[] findFirstAndLastIndex(int[] arr, int x){
+        int firstIndex = findFirstIndex(arr, x);
+        if(firstIndex == -1){
+            return new int[]{-1,-1};
+        }
+        int lastIndex = findFirstIndex(arr, x);
+
+
+        return new int[]{firstIndex, lastIndex};
+    }
+
+    public int findAllOccurancesPart2(int[] arr, int x){
+        int firstIndex = findFirstIndex(arr, x);
+        if(firstIndex == -1){
+            return 0;
+        }
+        int lastIndex = findFirstIndex(arr, x);
+
+
+        return lastIndex - firstIndex + 1;
+    }
+
+
+
+    public static ArrayList<Interval> mergeIntervals(ArrayList<Interval> intervals) {
+        if (intervals == null || intervals.size() <= 1) {
+            return intervals;
+        }
+        intervals.sort(new Comparator<Interval>() {
+            @Override
+            public int compare(Interval x, Interval y) {
+                return Integer.compare(x.start, y.start);
+            }
+        });
+
+        Stack<Interval> stack = new Stack<>();
+        stack.push(intervals.get(0));
+
+        for(int i = 1; i < intervals.size(); i ++){
+            Interval top = stack.peek();
+            Interval current = intervals.get(i);
+            if(top.end < current.start){
+                stack.push(intervals.get(i));
+            }else if (top.end > current.start){
+                top.end = current.end;
+                stack.pop();
+                stack.push(top);
+            }
+        }
+
+        ArrayList<Interval> merged = new ArrayList<>();
+        while(!stack.empty()){
+            merged.add(0, stack.pop());
+        }
+        return merged;
+    }
+
 
 
 
