@@ -69,10 +69,31 @@ public class LinkList <T>{
             back = back.next;
         }
         return back;
+    }
+
+    public void reverseList(){
+        if(head == null || head.next == null){
+            return;
+        }
+        Node<T> back = null;
+        Node<T> mid = head;
+        Node<T> front = head.next;
+
+        while(front != null){
+            mid.next = back;
+            back = mid;
+            mid = front;
+            front = front.next;
+        }
+
+        mid.next = back;
+        head = mid;
+
 
 
 
     }
+
 
 
 }

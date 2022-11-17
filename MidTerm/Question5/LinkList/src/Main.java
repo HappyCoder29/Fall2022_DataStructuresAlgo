@@ -11,6 +11,8 @@ public class Main {
         list.printList();
         System.out.println(list.length());
         System.out.println(list.getNthFromTheEnd(3));
+        list.reverseList();
+        list.printList();
         System.out.println();
     }
 }
