@@ -1,18 +1,21 @@
 public class Main {
     public static void main(String[] args) {
         LinkList<Integer> list = new LinkList<>();
-        list.append(5);
-        list.appendToTail(-1);
+        createCyclicList(list);
+        System.out.println(list.isCyclic());
+        System.out.println();
+
+    }
+
+    public static void createCyclicList(LinkList<Integer> list){
+        list.append(1);
+        list.appendToTail(2);
+        list.appendToTail(3);
+        list.appendToTail(4);
+        list.appendToTail(5);
         list.appendToTail(6);
         list.appendToTail(7);
-        list.appendToTail(23);
-        list.appendToTail(8);
-        list.appendToTail(9);
-        list.printList();
-        System.out.println(list.length());
-        System.out.println(list.getNthFromTheEnd(3));
-        list.reverseList();
-        list.printList();
-        System.out.println();
+        list.head.next.next.next.next.next.next.next = list.head.next.next;
+
     }
 }

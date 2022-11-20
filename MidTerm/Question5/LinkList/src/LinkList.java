@@ -5,6 +5,7 @@ public class LinkList <T>{
         head = null;
     }
 
+
     public void append(T data){
         Node<T> node = new Node<>(data);
         if(head == null){
@@ -88,10 +89,26 @@ public class LinkList <T>{
 
         mid.next = back;
         head = mid;
+    }
 
-
-
-
+    public boolean isCyclic(){
+        if(head == null){
+            return false;
+        }
+        Node<T> back = head;
+        Node<T> front = head;
+        while(front != null ){
+            if(front != null && front.next != null){
+                front = front.next.next;
+                back = back.next;
+            }else {
+                return false;
+            }
+            if(front == back){
+                return true;
+            }
+        }
+        return false;
     }
 
 
