@@ -1,8 +1,6 @@
 import java.awt.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
+import java.util.List;
 
 public class AdjacencyGraph {
     public HashMap<String, Node> nodes;
