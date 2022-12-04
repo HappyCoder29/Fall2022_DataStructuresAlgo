@@ -9,9 +9,12 @@ public class Node {
     public int rank;
     public Node parent;
 
+
     public Node(String name){
         this.name = name;
         this.listEdges = new LinkedList<>();
+        this.parent = this;
+        this.rank = 0;
     }
 
     public ArrayList<String> getNeighbours(){

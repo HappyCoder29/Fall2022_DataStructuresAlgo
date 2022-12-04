@@ -147,6 +147,176 @@ public class AdjacencyGraph {
         return false;
     }
 
+    public void topologicalSorting(){
+        ArrayList<String> list = new ArrayList<>();
+
+        for (Node node : nodes.values()) {
+            Stack<Node> stack = new Stack<>();
+            topologicalSorting(node, stack);
+            String str = "";
+            while(!stack.isEmpty()){
+                Node temp = stack.pop();
+                str += temp.name + " -> ";
+            }
+            list.add(str);
+        }
+
+        for (String str : list) {
+            System.out.println(str);
+        }
+
+    }
+
+
+    public void topologicalSorting(String startNode){
+        if(!nodes.containsKey(startNode.toUpperCase())){
+            return;
+        }
+        Node node = nodes.get(startNode.toUpperCase());
+        Stack<Node> stack = new Stack<>();
+        // call topo sort recursive function
+        topologicalSorting(node, stack);
+        while(!stack.isEmpty()){
+            Node temp = stack.pop();
+            System.out.printf(temp.name + " -> ");
+        }
+        System.out.println();
+    }
+
+    private void topologicalSorting(Node node, Stack<Node> stack){
+        for (String endStr : node.getNeighbours() ) {
+            Node endNode = nodes.get(endStr);
+            if(!stack.contains(endNode)){
+                topologicalSorting(endNode, stack);
+            }
+        }
+        stack.push(node);
+    }
+
+    public void topologicalSortingAllNodes(){
+        Stack<Node> stack = new Stack<>();
+        for (Node node : nodes.values()) {
+            if(!stack.contains(node)){
+                topologicalSorting(node, stack);
+            }
+        }
+
+        while(!stack.isEmpty()){
+            System.out.printf(stack.pop().name + " -> ");
+        }
+        System.out.println("Null");
+    }
+
+    public Node findParent(Node node){
+        Node parent = node.parent;
+        if(parent == node){
+            return node;
+        }
+        node.parent = findParent(parent);
+        return node.parent;
+    }
+
+    public void union(Node node1, Node node2){
+        Node parent1 = findParent(node1);
+        Node parent2 = findParent(node2);
+        if(parent1 == parent2){
+            return;
+        }
+        if(parent1.rank >= parent2.rank){
+            if(parent1.rank == parent2.rank){
+                parent1.rank ++;
+            }
+            parent2.parent = parent1;
+        }else{
+            parent1.parent = parent2;
+        }
+    }
+
+    public boolean isCyclicUnionFind(){
+        // get all the edges in a list
+        ArrayList<Edge> allEdges = new ArrayList<>();
+        for (Node node : nodes.values()) {
+            for (Edge edge : node.listEdges) {
+               allEdges.add(edge);
+            }
+        }
+
+        for (Edge edge: allEdges) {
+            Node start = nodes.get(edge.startNode);
+            Node end = nodes.get(edge.endNode);
+            if(findParent(start) == findParent(end)){
+                return true;
+            }
+            union(start, end);
+        }
+
+        return false;
+    }
+
+    public void printAllPaths(String source, String dest){
+        source = source.toUpperCase();
+        dest = dest.toUpperCase();
+
+        if(!nodes.containsKey(source) || !nodes.containsKey(dest) ){
+            return;
+        }
+        LinkedList<String> visited = new LinkedList<>();
+        printAllPaths(source, dest, visited);
+
+
+    }
+
+    private void printAllPaths(String current, String dest , LinkedList<String> visited){
+        if(visited.contains(current)){
+            return;
+        }
+        if(dest == current){
+            for (String str : visited) {
+                System.out.printf(str + " -> ");
+            }
+            System.out.println(dest);
+        }
+        visited.add(current);
+        Node node = nodes.get(current);
+        for (Edge edge : node.listEdges) {
+          if( !visited.contains(edge.endNode)) {
+              printAllPaths(edge.endNode, dest, visited);
+          }
+        }
+        visited.remove(current);
+    }
+
+
+    public  boolean isReachable(String startNode, String endNode){
+        startNode = startNode.toUpperCase();
+        endNode = endNode.toUpperCase();
+        if(!nodes.containsKey(startNode) || !nodes.containsKey(endNode)){
+            return false;
+        }
+        resetVisited();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(nodes.get(startNode));
+
+        while(!queue.isEmpty()){
+            Node node = queue.remove();
+            if(!node.isVisited){
+                System.out.printf(node.name + " -> ");
+                node.isVisited = true;
+            }
+            ArrayList<String> neighbours = node.getNeighbours();
+            for (String str : neighbours) {
+                if(nodes.get(str).name == endNode){
+                    return true;
+                }
+                if(nodes.get(str).isVisited == false){
+                    queue.add(nodes.get(str));
+                }
+            }
+        }
+        return false;
+
+    }
+
 
 
 }
